@@ -9,22 +9,22 @@ public class Main {
 
         System.out.println("--------------------------------");
 
-        UnweightedGraph<String> graph = new UnweightedGraph<>(true);
-        fillWithoutWeights(graph);
+        WeightedGraph<String> unweightedGraph = new WeightedGraph<>(true);
+        fillWithoutWeights(unweightedGraph);
 
         System.out.println("BFS:");
-        Search<String> bfs = new BreadthFirstSearch<>(graph, "Almaty");
+        Search<String> bfs = new BreadthFirstSearch<>(unweightedGraph, "Almaty");
         outputPath(bfs, "Kyzylorda");
     }
 
-    public static void fillWithoutWeights(UnweightedGraph<String> graph) {
-        graph.addEdge("Almaty", "Astana");
-        graph.addEdge("Shymkent", "Atyrau");
-        graph.addEdge("Atyrau", "Astana");
-        graph.addEdge("Almaty", "Shymkent");
-        graph.addEdge("Shymkent", "Astana");
-        graph.addEdge("Astana", "Kostanay");
-        graph.addEdge("Shymkent", "Kyzylorda");
+    public static void fillWithoutWeights(WeightedGraph<String> graph) {
+        graph.addEdge("Almaty", "Astana", 1);
+        graph.addEdge("Shymkent", "Atyrau", 1);
+        graph.addEdge("Atyrau", "Astana", 1);
+        graph.addEdge("Almaty", "Shymkent", 1);
+        graph.addEdge("Shymkent", "Astana", 1);
+        graph.addEdge("Astana", "Kostanay", 1);
+        graph.addEdge("Shymkent", "Kyzylorda", 1);
     }
 
     public static void fillWithWeights(WeightedGraph<String> graph) {
@@ -39,12 +39,14 @@ public class Main {
 
     public static void outputPath(Search<String> search, String key) {
         if (!search.hasPathTo(key)) {
-            System.out.println("No path found to " + key);
+            System.out.println("No path to " + key);
             return;
         }
+
         for (String v : search.pathTo(key)) {
             System.out.print(v + " -> ");
         }
+
         System.out.println();
     }
 }

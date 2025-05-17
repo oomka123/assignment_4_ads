@@ -5,23 +5,24 @@ public class BreadthFirstSearch<T> implements Search<T> {
     private final Set<T> marked = new HashSet<>();
     private final T start;
 
-    public BreadthFirstSearch(UnweightedGraph<T> graph, T start) {
+    public BreadthFirstSearch(WeightedGraph<T> graph, T start) {
         this.start = start;
         bfs(graph, start);
     }
 
-    private void bfs(UnweightedGraph<T> graph, T current) {
+    private void bfs(WeightedGraph<T> graph, T root) {
         Queue<T> queue = new LinkedList<>();
-        marked.add(current);
-        queue.offer(current);
+        marked.add(root);
+        queue.add(root);
 
         while (!queue.isEmpty()) {
-            T v = queue.poll();
-            for (T w : graph.getAdjVertices(v)) {
-                if (!marked.contains(w)) {
-                    marked.add(w);
-                    edgeTo.put(w, v);
-                    queue.offer(w);
+            T current = queue.poll();
+            for (Vertex<T> neighbor : graph.getAdjacencyVertices(current).keySet()) {
+                T data = neighbor.getData();
+                if (!marked.contains(data)) {
+                    marked.add(data);
+                    edgeTo.put(data, current);
+                    queue.add(data);
                 }
             }
         }
@@ -35,11 +36,12 @@ public class BreadthFirstSearch<T> implements Search<T> {
     @Override
     public List<T> pathTo(T key) {
         if (!hasPathTo(key)) return null;
-        LinkedList<T> path = new LinkedList<>();
+        List<T> path = new ArrayList<>();
         for (T x = key; !x.equals(start); x = edgeTo.get(x)) {
-            path.addFirst(x);
+            path.add(x);
         }
-        path.addFirst(start);
+        path.add(start);
+        Collections.reverse(path);
         return path;
     }
 }
